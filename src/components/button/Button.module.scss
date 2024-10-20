@@ -1,0 +1,19 @@
+.btn {
+  padding: 10px 5px;
+  border-radius: 5px;
+  border: 0;
+  outline: none;
+  text-align: center;
+
+  &Primary {
+    background-color: #03346e;
+    border: 1px solid #03346e;
+    color: #fff;
+  }
+
+  &Outline {
+    border: 1px solid #03346e;
+    background-color: #fff;
+    color: #03346e;
+  }
+}
