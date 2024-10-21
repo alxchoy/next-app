@@ -26,6 +26,11 @@
       border-radius: 5px;
       outline: none;
 
+      &:-webkit-autofill {
+        background-color: #fff !important;
+        -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+      }
+
       &::placeholder {
         visibility: hidden;
       }

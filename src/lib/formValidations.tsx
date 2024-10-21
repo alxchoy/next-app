@@ -7,7 +7,8 @@ export type FormValidations = {
 };
 
 export type FormField = {
-  value: string;
+  value?: string;
+  label?: string;
   validations?: FormValidations;
 };
 
@@ -30,8 +31,14 @@ export const fieldValidation = ({
     return `${capitalize(name)} is required`;
   }
   if (
+    field.validations?.pattern &&
+    !new RegExp(field.validations?.pattern).test(field.value!)
+  ) {
+    return `${capitalize(name)} is invalid`;
+  }
+  if (
     field.validations?.minLength &&
-    field.value.length < field.validations?.minLength
+    field.value!.length < field.validations?.minLength
   ) {
     return `${capitalize(name)} must have ${
       field.validations?.minLength

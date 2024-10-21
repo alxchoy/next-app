@@ -3,20 +3,20 @@
 import Link from "next/link";
 import styles from "./Button.module.scss";
 
-interface ButtonProps {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string;
   href?: string;
   children?: React.ReactNode;
   variant?: "primary" | "outline";
-  onClick?: () => void;
 }
 
-export default function Button({
+export function Button({
   variant = "primary",
   label,
   href,
   children,
-  onClick,
+  ...props
 }: ButtonProps) {
   const mapVariantClasses = {
     primary: styles.btnPrimary,
@@ -36,9 +36,8 @@ export default function Button({
 
   return (
     <button
-      type="submit"
       className={`${styles.btn} ${mapVariantClasses[variant]}`}
-      onClick={onClick}
+      {...props}
     >
       {label}
     </button>

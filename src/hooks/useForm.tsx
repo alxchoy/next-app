@@ -13,29 +13,36 @@ export function useForm<T>(initialValue: FormState<T>) {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    const nameT = name as keyof T;
     const fieldsUpdated = {
       ...fields,
-      [name]: { ...fields[name as keyof T], value },
+      [name]: { ...fields[nameT], value },
     };
     setFields(fieldsUpdated);
 
     const errorField = fieldValidation({
       name,
-      field: fieldsUpdated[name as keyof T],
+      field: fieldsUpdated[nameT],
     });
     isTouched && setErrors({ ...errors, [name]: errorField });
   };
 
   const handleSubmit =
-    (cb: () => void) => (event: React.FormEvent<HTMLFormElement>) => {
+    (cb: (fields: T) => void) => (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      setIsTouched(true);
       const newErrors = formValidation(fields);
 
       if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
+        setIsTouched(true);
       } else {
-        cb();
+        let data = {} as T;
+        Object.keys(fields).forEach((key) => {
+          const keyT = key as keyof T;
+          const field = fields[keyT];
+          data[keyT] = field.value! as T[keyof T];
+        });
+        cb(data);
       }
     };
 
