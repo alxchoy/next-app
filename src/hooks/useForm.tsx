@@ -24,7 +24,7 @@ export function useForm<T>(initialValue: FormState<T>) {
       name,
       field: fieldsUpdated[nameT],
     });
-    isTouched && setErrors({ ...errors, [name]: errorField });
+    if (isTouched) setErrors({ ...errors, [name]: errorField });
   };
 
   const handleSubmit =
@@ -36,7 +36,7 @@ export function useForm<T>(initialValue: FormState<T>) {
         setErrors(newErrors);
         setIsTouched(true);
       } else {
-        let data = {} as T;
+        const data = {} as T;
         Object.keys(fields).forEach((key) => {
           const keyT = key as keyof T;
           const field = fields[keyT];

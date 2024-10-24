@@ -49,7 +49,7 @@ export const fieldValidation = ({
 export const formValidation = function <T>(
   fields: FormState<T>
 ): FormErrors<T> {
-  let errors = {} as FormErrors<T>;
+  const errors = {} as FormErrors<T>;
 
   Object.keys(fields).forEach((key) => {
     const field = fields[key as keyof T];
