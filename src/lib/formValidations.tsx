@@ -1,24 +1,5 @@
+import { FormField, FormState } from "@/components/form/Form";
 import { capitalize } from "./utils";
-
-export type FormValidations = {
-  required?: boolean;
-  pattern?: string;
-  minLength?: number;
-};
-
-export type FormField = {
-  value?: string;
-  label?: string;
-  validations?: FormValidations;
-};
-
-export type FormState<T> = {
-  [Property in keyof T]: FormField;
-};
-
-export type FormErrors<T> = {
-  [Property in keyof T]: string;
-};
 
 export const fieldValidation = ({
   name,
@@ -26,7 +7,7 @@ export const fieldValidation = ({
 }: {
   name: string;
   field: FormField;
-}): string | undefined => {
+}): string => {
   if (field.validations?.required && !field.value) {
     return `${capitalize(name)} is required`;
   }
@@ -44,20 +25,16 @@ export const fieldValidation = ({
       field.validations?.minLength
     } characters at least`;
   }
+
+  return "";
 };
 
-export const formValidation = function <T>(
-  fields: FormState<T>
-): FormErrors<T> {
-  const errors = {} as FormErrors<T>;
+export const formValidation = <T,>(fields: FormState<T>): FormState<T> => {
+  const formData = { ...fields };
 
-  Object.keys(fields).forEach((key) => {
-    const field = fields[key as keyof T];
-    const error = fieldValidation({ name: key, field });
-    if (error) {
-      errors[key as keyof T] = error;
-    }
+  Object.entries<FormField>(formData).forEach(([key, field]) => {
+    formData[key as keyof T].error = fieldValidation({ name: key, field });
   });
 
-  return errors;
+  return formData;
 };

@@ -3,8 +3,7 @@
 import Link from "next/link";
 import styles from "./Button.module.scss";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ComponentProps<"button"> {
   label?: string;
   href?: string;
   children?: React.ReactNode;

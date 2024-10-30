@@ -2,7 +2,7 @@ import { capitalize } from "@/lib/utils";
 import styles from "./Input.module.scss";
 import { useId } from "react";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.ComponentProps<"input"> {
   label?: string;
   error?: string;
 }

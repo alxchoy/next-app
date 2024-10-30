@@ -1,7 +1,8 @@
 "use client";
-import { FormState } from "@/lib/formValidations";
-import AuthForm from "../components/auth-form/AuthForm";
 import { Button } from "@/components/button/Button";
+import Input from "@/components/input/Input";
+import { Form, FormState } from "@/components/form/Form";
+import styles from "../auth.module.scss";
 
 type LoginFields = {
   email: string;
@@ -24,18 +25,22 @@ const Login = () => {
   };
 
   return (
-    <AuthForm
-      title="Welcome back!"
-      fields={fields}
-      handleFormSubmit={handleLogin}
-      buttons={[
-        { component: Button, props: { label: "Login", type: "submit" } },
-        {
-          component: Button,
-          props: { href: "/register", label: "Register", variant: "outline" },
-        },
-      ]}
-    />
+    <div>
+      <h1 className={styles.formTitle}>Welcome back!</h1>
+      <Form fields={fields} handleFormSubmit={handleLogin}>
+        {Object.keys(fields).map((key) => {
+          return (
+            <Input
+              key={key}
+              name={key}
+              label={fields[key as keyof LoginFields].label || key}
+            />
+          );
+        })}
+        <Button label="Login" type="submit" />
+        <Button label="Register" href="/register" variant="outline" />
+      </Form>
+    </div>
   );
 };
 
