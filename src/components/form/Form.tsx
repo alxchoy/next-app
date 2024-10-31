@@ -13,7 +13,7 @@ export type FormState<T> = {
   [Property in keyof T]: FormField;
 };
 
-export type FormValidations = {
+type FormValidations = {
   required?: boolean;
   pattern?: string;
   minLength?: number;
@@ -25,10 +25,6 @@ export type FormField = {
   value?: string;
   error?: string;
   validations?: FormValidations;
-};
-
-export type FormValues<T> = {
-  [Property in keyof T]: string;
 };
 
 export const Form = <T,>({
@@ -49,6 +45,7 @@ export const Form = <T,>({
           return React.cloneElement(child as React.ReactElement<InputProps>, {
             onChange: handleChange,
             value: formData[child.props.name as keyof T].value || "",
+            error: formData[child.props.name as keyof T].error || "",
           });
         }
 
