@@ -8,10 +8,13 @@ export function useForm<T>(initialValues: FormState<T>) {
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const { name, value } = event.target;
-    const fieldError = fieldValidation({
-      name,
-      field: { ...formData[name as keyof T], value },
-    });
+    const fieldError = fieldValidation(
+      {
+        name,
+        field: { ...formData[name as keyof T], value },
+      },
+      formData
+    );
 
     setFormData(() => ({
       ...formData,

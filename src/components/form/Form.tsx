@@ -17,6 +17,7 @@ type FormValidations = {
   required?: boolean;
   pattern?: string;
   minLength?: number;
+  matchTo?: string;
 };
 
 export type FormField = {
@@ -27,11 +28,7 @@ export type FormField = {
   validations?: FormValidations;
 };
 
-export const Form = <T,>({
-  children,
-  fields,
-  handleFormSubmit,
-}: FormProps<T>) => {
+const Form = <T,>({ children, fields, handleFormSubmit }: FormProps<T>) => {
   const { formData, handleChange, handleSubmit } = useForm(fields);
 
   return (
@@ -54,3 +51,5 @@ export const Form = <T,>({
     </form>
   );
 };
+
+export default Form;

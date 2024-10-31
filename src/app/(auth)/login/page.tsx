@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/button/Button";
+import Button from "@/components/button/Button";
 import Input from "@/components/input/Input";
-import { Form, FormState } from "@/components/form/Form";
+import Form, { FormState } from "@/components/form/Form";
 import styles from "../auth.module.scss";
 
 type LoginFields = {
@@ -28,15 +28,9 @@ const Login = () => {
     <div>
       <h1 className={styles.formTitle}>Welcome back!</h1>
       <Form fields={fields} handleFormSubmit={handleLogin}>
-        {Object.keys(fields).map((key) => {
-          return (
-            <Input
-              key={key}
-              name={key}
-              label={fields[key as keyof LoginFields].label || key}
-            />
-          );
-        })}
+        {Object.entries(fields).map(([key, { label }]) => (
+          <Input key={key} name={key} label={label || key} />
+        ))}
         <Button label="Login" type="submit" />
         <Button label="Register" href="/register" variant="outline" />
       </Form>

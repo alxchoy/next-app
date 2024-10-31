@@ -10,7 +10,7 @@ export interface ButtonProps extends React.ComponentProps<"button"> {
   variant?: "primary" | "outline";
 }
 
-export function Button({
+export default function Button({
   variant = "primary",
   label,
   href,

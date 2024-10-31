@@ -1,7 +1,9 @@
 "use client";
-import { FormState } from "@/lib/formValidations";
-import AuthForm from "../components/auth-form/AuthForm";
-import { Button } from "@/components/button/Button";
+
+import Form, { FormState } from "@/components/form/Form";
+import Button from "@/components/button/Button";
+import Input from "@/components/input/Input";
+import styles from "../auth.module.scss";
 
 type RegisterFields = {
   fullName: string;
@@ -10,14 +12,19 @@ type RegisterFields = {
   passwordConfirm: string;
 };
 
-export default function Register() {
+const Register = () => {
   const fields: FormState<RegisterFields> = {
-    fullName: { label: "Full name", validations: {} },
-    email: { validations: { required: true } },
-    password: { validations: { required: true } },
+    fullName: { label: "Full name", validations: { required: true } },
+    email: {
+      validations: {
+        required: true,
+        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+      },
+    },
+    password: { validations: { required: true, minLength: 6 } },
     passwordConfirm: {
       label: "Confirm password",
-      validations: { required: true },
+      validations: { required: true, matchTo: "password" },
     },
   };
 
@@ -26,17 +33,17 @@ export default function Register() {
   };
 
   return (
-    <AuthForm
-      title="New user"
-      fields={fields}
-      handleFormSubmit={handleRegister}
-      buttons={[
-        { component: Button, props: { label: "Register" } },
-        {
-          component: Button,
-          props: { href: "/login", variant: "outline", label: "Login" },
-        },
-      ]}
-    />
+    <div>
+      <h1 className={styles.formTitle}>New User</h1>
+      <Form fields={fields} handleFormSubmit={handleRegister}>
+        {Object.entries(fields).map(([key, { label }]) => (
+          <Input key={key} name={key} label={label || key} />
+        ))}
+        <Button label="Register" type="submit" />
+        <Button label="Login" href="/login" variant="outline" />
+      </Form>
+    </div>
   );
-}
+};
+
+export default Register;
