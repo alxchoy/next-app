@@ -1,4 +1,5 @@
 "use client";
+import { supabaseClient } from "@/lib/supabaseClient";
 import Button from "@/components/button/Button";
 import Input from "@/components/input/Input";
 import Form, { FormState } from "@/components/form/Form";
@@ -17,11 +18,26 @@ const Login = () => {
         pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
       },
     },
-    password: { validations: { required: true } },
+    password: { validations: { required: true, minLength: 6 } },
   };
 
-  const handleLogin = (fields: LoginFields) => {
-    console.log("handleLogin:", fields);
+  const handleLogin = async (fields: LoginFields) => {
+    const { email, password } = fields;
+    // const { data, error } = await supabaseClient.auth.signInWithPassword({
+    //   email,
+    //   password,
+    // });
+    // console.log("data: ", data);
+    // console.log("error: ", error);
+    const data = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const res = await data.json();
+
+    console.log(res);
   };
 
   return (

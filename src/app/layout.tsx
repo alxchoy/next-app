@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-// import localFont from "next/font/local";
 import { Roboto_Condensed } from "next/font/google";
 import "@/styles/reset.scss";
 

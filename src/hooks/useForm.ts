@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormField, FormState } from "@/components/form/Form";
 import { fieldValidation, formValidation } from "@/lib/formValidations";
 
 export function useForm<T>(initialValues: FormState<T>) {
   const [formData, setFormData] = useState(initialValues);
-  const [isTouched, setIsTouched] = useState(false);
+  const [isTouched, setTouched] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isLoading) {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 0);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const { name, value } = event.target;
@@ -31,15 +42,16 @@ export function useForm<T>(initialValues: FormState<T>) {
       event.preventDefault();
       const formDataWithErrors = formValidation(formData);
       setFormData(formDataWithErrors);
-      setIsTouched(true);
+      setTouched(true);
 
       if (!hasErrors(formDataWithErrors)) {
+        setLoading(true);
         const data = getValuesFromForm(formDataWithErrors) as T;
         cb(data);
       }
     };
 
-  return { formData, handleChange, handleSubmit };
+  return { formData, handleChange, handleSubmit, isLoading };
 }
 
 function hasErrors<T>(form: FormState<T>): boolean {

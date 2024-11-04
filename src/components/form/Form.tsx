@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "@/hooks/useForm";
 import Input, { InputProps } from "../input/Input";
 import styles from "./Form.module.scss";
+import Button, { ButtonProps } from "../button/Button";
 
 type FormProps<T> = {
   children: React.ReactNode;
@@ -29,8 +30,8 @@ export type FormField = {
 };
 
 const Form = <T,>({ children, fields, handleFormSubmit }: FormProps<T>) => {
-  const { formData, handleChange, handleSubmit } = useForm(fields);
-
+  const { formData, handleChange, handleSubmit, isLoading } = useForm(fields);
+  // console.log("FORM::: ", isLoading);
   return (
     <form className={styles.form} onSubmit={handleSubmit(handleFormSubmit)}>
       {React.Children.map(children, (child) => {
@@ -43,6 +44,13 @@ const Form = <T,>({ children, fields, handleFormSubmit }: FormProps<T>) => {
             onChange: handleChange,
             value: formData[child.props.name as keyof T].value || "",
             error: formData[child.props.name as keyof T].error || "",
+          });
+        }
+
+        if (child.type === Button && child.props.type === "submit") {
+          // console.log("weeeeee: ", isLoading);
+          return React.cloneElement(child as React.ReactElement<ButtonProps>, {
+            label: isLoading ? "Loading..." : child.props.label,
           });
         }
 
