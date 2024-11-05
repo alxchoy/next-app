@@ -10,12 +10,13 @@ export async function POST(req: Request) {
       email,
       password,
     });
-    if (error) {
-      const { name, message, status } = error;
+    if (error)
       throw await errorHandler(
-        Response.json({ error: { name, message } }, { status })
+        Response.json(
+          { error: { name: error.name, message: error.message } },
+          { status: error.status }
+        )
       );
-    }
 
     const authRes: AuthResponse = {
       id: data.user.id,
