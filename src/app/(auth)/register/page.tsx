@@ -1,5 +1,5 @@
 "use client";
-import { authService } from "@/services/authService";
+import authService from "@/services/authService";
 import { RegisterRequest } from "@/app/api/auth/types";
 import Form, { FormState } from "@/components/form/Form";
 import Button from "@/components/button/Button";

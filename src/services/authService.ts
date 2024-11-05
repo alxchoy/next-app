@@ -13,7 +13,9 @@ const register = (req: RegisterRequest) => {
   return httpClient.post<AuthResponse>("/api/auth/register", req);
 };
 
-export const authService = {
+const authService = {
   login,
   register,
 };
+
+export default authService;

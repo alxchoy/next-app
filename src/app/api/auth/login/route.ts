@@ -1,6 +1,6 @@
 import { supabaseClient } from "@/lib/supabaseClient";
 import { errorResponse, successResponse } from "@/lib/http/responseHandler";
-import { BadRequestError, HttpError } from "@/lib/http/httpErrors";
+import { errorHandler, HttpError } from "@/lib/http/httpErrors";
 import { AuthResponse, LoginRequest } from "../types";
 
 export async function POST(req: Request) {
@@ -10,7 +10,12 @@ export async function POST(req: Request) {
       email,
       password,
     });
-    if (error) throw new BadRequestError(error?.message);
+    if (error) {
+      const { name, message, status } = error;
+      throw await errorHandler(
+        Response.json({ error: { name, message } }, { status })
+      );
+    }
 
     const authRes: AuthResponse = {
       id: data.user.id,

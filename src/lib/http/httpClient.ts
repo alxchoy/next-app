@@ -1,9 +1,4 @@
-import {
-  BadRequestError,
-  HttpError,
-  InternalServerError,
-  NotFoundError,
-} from "./httpErrors";
+import { errorHandler, HttpError } from "./httpErrors";
 
 export interface HttpResponse<T> {
   data?: T;
@@ -47,7 +42,7 @@ class HttpClient {
 
     try {
       const res = await fetch(url, config);
-      if (!res.ok) await this.handleError(res);
+      if (!res.ok) throw await errorHandler(res);
       const resData = await res.json();
       return { data: resData, success: true };
     } catch (err) {
@@ -57,18 +52,6 @@ class HttpClient {
 
       throw err;
     }
-  }
-
-  private async handleError(res: Response) {
-    const data = await res.json();
-    const errorMessage = data.error?.message || data.message || data.statusText;
-    const mapErrors: Record<number, Error> = {
-      400: new BadRequestError(errorMessage),
-      404: new NotFoundError(errorMessage),
-      500: new InternalServerError(errorMessage),
-    };
-
-    throw mapErrors[res.status];
   }
 }
 
