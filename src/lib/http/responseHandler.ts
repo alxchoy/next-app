@@ -1,9 +1,5 @@
+import { HttpResponse } from "./httpClient";
 import { HttpError } from "./httpErrors";
-
-export type HttpResponse<T> = {
-  data?: T;
-  error?: HttpError;
-};
 
 export const successResponse = <T>({
   data,
@@ -12,7 +8,7 @@ export const successResponse = <T>({
   data: T;
   status?: number;
 }): Response => {
-  const response: HttpResponse<T> = { data };
+  const response: HttpResponse<T> = { data, success: true };
 
   return Response.json(response, { status });
 };
@@ -27,6 +23,7 @@ export const errorResponse = <T>({
   const { message, name } = error;
   const response: HttpResponse<T> = {
     error: { name, message, statusCode: error.statusCode || status },
+    success: false,
   };
 
   return Response.json(response, { status });

@@ -1,20 +1,23 @@
 import { supabaseClient } from "@/lib/supabaseClient";
-import { LoginRequest } from "../types";
 import { errorResponse, successResponse } from "@/lib/http/responseHandler";
 import { BadRequestError, HttpError } from "@/lib/http/httpErrors";
+import { AuthResponse, LoginRequest } from "../types";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   try {
     const { email, password }: LoginRequest = await req.json();
     const { data, error } = await supabaseClient.auth.signInWithPassword({
       email,
       password,
     });
-    console.log("Error POST::: ", error);
     if (error) throw new BadRequestError(error?.message);
-    // if (error) return Response.json(error, { status: error.status });
 
-    return successResponse({ data });
+    const authRes: AuthResponse = {
+      id: data.user.id,
+      email: data.user.email!,
+      fullName: data.user.user_metadata.full_name,
+    };
+    return successResponse<AuthResponse>({ data: authRes });
   } catch (err) {
     if (err instanceof HttpError) {
       return errorResponse({ error: err, status: err.statusCode });

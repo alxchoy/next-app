@@ -5,7 +5,7 @@ import {
   NotFoundError,
 } from "./httpErrors";
 
-interface HttpResponse<T> {
+export interface HttpResponse<T> {
   data?: T;
   error?: HttpError;
   success: boolean;

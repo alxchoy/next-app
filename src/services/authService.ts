@@ -5,10 +5,15 @@ import {
   RegisterRequest,
 } from "@/app/api/auth/types";
 
-export const login = (req: LoginRequest) => {
+const login = (req: LoginRequest) => {
   return httpClient.post<AuthResponse>("/api/auth/login", req);
 };
 
-export const register = (req: RegisterRequest) => {
+const register = (req: RegisterRequest) => {
   return httpClient.post<AuthResponse>("/api/auth/register", req);
+};
+
+export const authService = {
+  login,
+  register,
 };

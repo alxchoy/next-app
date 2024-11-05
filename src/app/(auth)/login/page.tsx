@@ -1,12 +1,10 @@
 "use client";
-import { supabaseClient } from "@/lib/supabaseClient";
+import { authService } from "@/services/authService";
+import { LoginRequest } from "@/app/api/auth/types";
+import Form, { FormState } from "@/components/form/Form";
 import Button from "@/components/button/Button";
 import Input from "@/components/input/Input";
-import Form, { FormState } from "@/components/form/Form";
 import styles from "../auth.module.scss";
-import { useFetch } from "@/hooks/useFetch";
-import httpClient from "@/lib/http/httpClient";
-import { AuthResponse, LoginRequest } from "@/app/api/auth/types";
 
 type LoginFields = {
   email: string;
@@ -14,8 +12,6 @@ type LoginFields = {
 };
 
 const Login = () => {
-  // const { data, fetcher } = useFetch();
-
   const fields: FormState<LoginRequest> = {
     email: {
       validations: {
@@ -27,12 +23,7 @@ const Login = () => {
   };
 
   const handleLogin = async (fields: LoginRequest) => {
-    const { email, password } = fields;
-
-    const { data, error, success } = await httpClient.post<AuthResponse>(
-      "/api/auth/login",
-      fields
-    );
+    const { data, error, success } = await authService.login(fields);
     console.log(data, error, success);
   };
 

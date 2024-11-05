@@ -1,4 +1,6 @@
 "use client";
+import { authService } from "@/services/authService";
+import { RegisterRequest } from "@/app/api/auth/types";
 import Form, { FormState } from "@/components/form/Form";
 import Button from "@/components/button/Button";
 import Input from "@/components/input/Input";
@@ -12,7 +14,7 @@ type RegisterFields = {
 };
 
 const Register = () => {
-  const fields: FormState<RegisterFields> = {
+  const fields: FormState<RegisterRequest> = {
     fullName: { label: "Full name", validations: { required: true } },
     email: {
       validations: {
@@ -27,8 +29,9 @@ const Register = () => {
     },
   };
 
-  const handleRegister = (fields: RegisterFields) => {
-    console.log("handleRegister: ", fields);
+  const handleRegister = async (fields: RegisterRequest) => {
+    const { data, error, success } = await authService.register(fields);
+    console.log(data, error, success);
   };
 
   return (
