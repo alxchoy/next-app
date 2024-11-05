@@ -4,6 +4,9 @@ import Button from "@/components/button/Button";
 import Input from "@/components/input/Input";
 import Form, { FormState } from "@/components/form/Form";
 import styles from "../auth.module.scss";
+import { useFetch } from "@/hooks/useFetch";
+import httpClient from "@/lib/http/httpClient";
+import { AuthResponse, LoginRequest } from "@/app/api/auth/types";
 
 type LoginFields = {
   email: string;
@@ -11,7 +14,9 @@ type LoginFields = {
 };
 
 const Login = () => {
-  const fields: FormState<LoginFields> = {
+  // const { data, fetcher } = useFetch();
+
+  const fields: FormState<LoginRequest> = {
     email: {
       validations: {
         required: true,
@@ -21,23 +26,14 @@ const Login = () => {
     password: { validations: { required: true, minLength: 6 } },
   };
 
-  const handleLogin = async (fields: LoginFields) => {
+  const handleLogin = async (fields: LoginRequest) => {
     const { email, password } = fields;
-    // const { data, error } = await supabaseClient.auth.signInWithPassword({
-    //   email,
-    //   password,
-    // });
-    // console.log("data: ", data);
-    // console.log("error: ", error);
-    const data = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
 
-    const res = await data.json();
-
-    console.log(res);
+    const { data, error, success } = await httpClient.post<AuthResponse>(
+      "/api/auth/login",
+      fields
+    );
+    console.log(data, error, success);
   };
 
   return (

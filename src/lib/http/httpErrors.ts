@@ -1,4 +1,4 @@
-class HttpError extends Error {
+export class HttpError extends Error {
   statusCode: number;
 
   constructor(message: string, statusCode: number) {
@@ -8,14 +8,25 @@ class HttpError extends Error {
   }
 }
 
-class BadRequest extends HttpError {
-  constructor() {
-    super("Bad request error", 400);
+export class BadRequestError extends HttpError {
+  constructor(message: string) {
+    super(message, 400);
+    this.name = "BadRequestError";
+    this.message = message;
   }
 }
 
-class InternalError extends HttpError {
-  constructor() {
-    super("Internal server error", 500);
+export class NotFoundError extends HttpError {
+  constructor(message: string) {
+    super(message, 404);
+    this.name = "NotFoundError";
+    this.message = message;
+  }
+}
+
+export class InternalServerError extends HttpError {
+  constructor(message: string) {
+    super(message, 500);
+    this.name = "InternalServerError";
   }
 }

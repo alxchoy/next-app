@@ -1,7 +1,3 @@
-// export type AuthResponse = {
-//   email: string;
-// }
-
 export interface LoginRequest {
   email: string;
   password: string;

@@ -1,5 +1,7 @@
 import { supabaseClient } from "@/lib/supabaseClient";
 import { LoginRequest } from "../types";
+import { errorResponse, successResponse } from "@/lib/http/responseHandler";
+import { BadRequestError, HttpError } from "@/lib/http/httpErrors";
 
 export async function POST(req: Request, res: Response) {
   try {
@@ -8,14 +10,14 @@ export async function POST(req: Request, res: Response) {
       email,
       password,
     });
+    console.log("Error POST::: ", error);
+    if (error) throw new BadRequestError(error?.message);
+    // if (error) return Response.json(error, { status: error.status });
 
-    if (error) {
-      const errorBody = JSON.stringify({ message: error.message });
-      return new Response(errorBody, { status: error.status });
-    }
-
-    return Response.json(data);
+    return successResponse({ data });
   } catch (err) {
-    console.log(err);
+    if (err instanceof HttpError) {
+      return errorResponse({ error: err, status: err.statusCode });
+    }
   }
 }
