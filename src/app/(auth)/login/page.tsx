@@ -21,9 +21,8 @@ const Login = () => {
   };
 
   const handleLogin = async (fields: LoginRequest) => {
-    await fetcher(fields);
-    console.log(data);
-    console.log(error);
+    const res = await fetcher(fields);
+    console.log(res);
   };
 
   return (

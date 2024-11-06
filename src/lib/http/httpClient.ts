@@ -44,7 +44,7 @@ class HttpClient {
       const res = await fetch(url, config);
       if (!res.ok) throw await errorHandler(res);
       const resData = await res.json();
-      return { data: resData, success: true };
+      return { data: resData.data || resData, success: true };
     } catch (err) {
       if (err instanceof HttpError) {
         return { error: err, success: false };

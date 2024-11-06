@@ -1,24 +1,46 @@
 import { HttpResponse } from "@/lib/http/httpClient";
-import { useReducer, useState } from "react";
+import { HttpError } from "@/lib/http/httpErrors";
+import { useCallback, useState } from "react";
 
-type FetchRequest<Req, Res> = (req: Req) => Promise<HttpResponse<Res>>;
+type FetchRequestFn<Req, Res> = (req: Req) => Promise<HttpResponse<Res>>;
 
-export function useFetch<Req, Res>(requestFn: FetchRequest<Req, Res>) {
-  const [data, setData] = useState<Res>();
-  const [error, setError] = useState("");
+type FetchOptions = {
+  isImmediately?: boolean;
+};
+
+export function useFetch<Req, Res>(
+  requestFn: FetchRequestFn<Req, Res>,
+  { isImmediately = false }: FetchOptions = {}
+) {
+  const [data, setData] = useState<Res | null>();
+  const [error, setError] = useState<HttpError | null>();
   const [isLoading, setLoading] = useState(false);
 
-  const fetcher = async (req: Req) => {
-    try {
+  const fetcher = useCallback(
+    async (req: Req): Promise<HttpResponse<Res> | undefined> => {
       setLoading(true);
-      const res = await requestFn(req);
-      res.success ? setData(res.data) : setError(res.error?.message!);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      setData(null);
+      setError(null);
+
+      try {
+        const res = await requestFn(req);
+        res.success
+          ? setData(res.data)
+          : setError({
+              name: res.error?.name!,
+              message: res.error?.message!,
+              statusCode: res.error?.statusCode!,
+            });
+
+        if (!isImmediately) return { ...res };
+      } catch (err) {
+        setError(err as HttpError);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   return { data, error, isLoading, fetcher };
 }
