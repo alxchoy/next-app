@@ -24,13 +24,12 @@ export function useFetch<Req, Res>(
 
       try {
         const res = await requestFn(req);
-        res.success
-          ? setData(res.data)
-          : setError({
-              name: res.error?.name!,
-              message: res.error?.message!,
-              statusCode: res.error?.statusCode!,
-            });
+        if (res.success) {
+          setData(res.data);
+        } else {
+          const { name, message, statusCode } = res.error!;
+          setError({ name, message, statusCode });
+        }
 
         if (!isImmediately) return { ...res };
       } catch (err) {

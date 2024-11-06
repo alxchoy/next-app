@@ -1,7 +1,7 @@
 "use client";
 import authService from "@/services/authService";
 import { useFetch } from "@/hooks/useFetch";
-import { AuthResponse, LoginRequest } from "@/app/api/auth/types";
+import { LoginRequest } from "@/app/api/auth/types";
 import Form, { FormState } from "@/components/form/Form";
 import Button from "@/components/button/Button";
 import Input from "@/components/input/Input";
