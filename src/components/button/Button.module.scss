@@ -5,6 +5,13 @@
   outline: none;
   text-align: center;
 
+  &:disabled {
+    border: 1px solid #e5e5e5;
+    background-color: #e5e5e5;
+    color: #c6bebe;
+    cursor: not-allowed;
+  }
+
   &Primary {
     background-color: #03346e;
     border: 1px solid #03346e;

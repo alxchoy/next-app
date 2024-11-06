@@ -1,14 +1,24 @@
-import { useEffect, useState } from "react";
+import { HttpResponse } from "@/lib/http/httpClient";
+import { useReducer, useState } from "react";
 
-export function useFetch(requestFn: () => Promise<any>) {
-  const [data, setData] = useState();
+type FetchRequest<Req, Res> = (req: Req) => Promise<HttpResponse<Res>>;
 
-  const fetcher = async () => {
-    const res = await requestFn();
-    console.log("RES:: ", res);
+export function useFetch<Req, Res>(requestFn: FetchRequest<Req, Res>) {
+  const [data, setData] = useState<Res>();
+  const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(false);
+
+  const fetcher = async (req: Req) => {
+    try {
+      setLoading(true);
+      const res = await requestFn(req);
+      res.success ? setData(res.data) : setError(res.error?.message!);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // useEffect(() => {}, []);
-
-  return { data, fetcher };
+  return { data, error, isLoading, fetcher };
 }

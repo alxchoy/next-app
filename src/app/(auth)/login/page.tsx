@@ -1,17 +1,15 @@
 "use client";
 import authService from "@/services/authService";
-import { LoginRequest } from "@/app/api/auth/types";
+import { useFetch } from "@/hooks/useFetch";
+import { AuthResponse, LoginRequest } from "@/app/api/auth/types";
 import Form, { FormState } from "@/components/form/Form";
 import Button from "@/components/button/Button";
 import Input from "@/components/input/Input";
 import styles from "../auth.module.scss";
 
-type LoginFields = {
-  email: string;
-  password: string;
-};
-
 const Login = () => {
+  const { data, error, isLoading, fetcher } = useFetch(authService.login);
+
   const fields: FormState<LoginRequest> = {
     email: {
       validations: {
@@ -23,8 +21,9 @@ const Login = () => {
   };
 
   const handleLogin = async (fields: LoginRequest) => {
-    const { data, error, success } = await authService.login(fields);
-    console.log(data, error, success);
+    await fetcher(fields);
+    console.log(data);
+    console.log(error);
   };
 
   return (
@@ -34,7 +33,11 @@ const Login = () => {
         {Object.entries(fields).map(([key, { label }]) => (
           <Input key={key} name={key} label={label || key} />
         ))}
-        <Button label="Login" type="submit" />
+        <Button
+          label={isLoading ? "Loading..." : "Login"}
+          type="submit"
+          disabled={isLoading}
+        />
         <Button label="Register" href="/register" variant="outline" />
       </Form>
     </div>

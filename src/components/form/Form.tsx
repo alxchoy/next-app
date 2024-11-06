@@ -30,8 +30,8 @@ export type FormField = {
 };
 
 const Form = <T,>({ children, fields, handleFormSubmit }: FormProps<T>) => {
-  const { formData, handleChange, handleSubmit, isLoading } = useForm(fields);
-  // console.log("FORM::: ", isLoading);
+  const { formData, handleChange, handleSubmit } = useForm(fields);
+
   return (
     <form className={styles.form} onSubmit={handleSubmit(handleFormSubmit)}>
       {React.Children.map(children, (child) => {
@@ -47,12 +47,11 @@ const Form = <T,>({ children, fields, handleFormSubmit }: FormProps<T>) => {
           });
         }
 
-        if (child.type === Button && child.props.type === "submit") {
-          // console.log("weeeeee: ", isLoading);
-          return React.cloneElement(child as React.ReactElement<ButtonProps>, {
-            label: isLoading ? "Loading..." : child.props.label,
-          });
-        }
+        // if (child.type === Button && child.props.type === "submit") {
+        //   return React.cloneElement(child as React.ReactElement<ButtonProps>, {
+        //     label: isLoading ? "Loading..." : child.props.label,
+        //   });
+        // }
 
         return child;
       })}
